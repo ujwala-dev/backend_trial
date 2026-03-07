@@ -1,5 +1,6 @@
 ﻿using backend_trial.Models.DTO.Auth;
 using backend_trial.Repositories.Interfaces;
+using backend_trial.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -9,11 +10,11 @@ namespace backend_trial.Controllers
     [ApiController]
     public class AuthController : ControllerBase
     {
-        private readonly IAuthRepository authRepository;
+        private readonly IAuthService authService;
 
-        public AuthController(IAuthRepository authRepository)
+        public AuthController(IAuthService authService)
         {
-            this.authRepository = authRepository;
+            this.authService = authService;
         }
 
 
@@ -28,7 +29,7 @@ namespace backend_trial.Controllers
                 return BadRequest(ModelState);
             }
 
-            var (success, message) = await authRepository.RegisterAsync(request);
+            var (success, message) = await authService.RegisterAsync(request);
 
             if (!success)
             {
@@ -58,7 +59,7 @@ namespace backend_trial.Controllers
                 return BadRequest(ModelState);
             }
 
-            var (success, user, message, statusCode) = await authRepository.LoginAsync(request);
+            var (success, user, message, statusCode) = await authService.LoginAsync(request);
 
             if (!success)
             {
